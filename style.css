@@ -1,1 +1,249 @@
+/* ==========
+Общие настройки
+========== */
 
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: "Segoe UI", Arial, sans-serif;
+background: linear-gradient(135deg, #eef6ff, #d9ebff);
+min-height: 100vh;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 20px;
+color: #1f2937;
+}
+
+/* ==========
+Основная карточка
+========== */
+
+.container {
+width: 100%;
+max-width: 700px;
+}
+
+.card {
+background: white;
+border-radius: 22px;
+padding: 35px;
+box-shadow: 0 20px 45px rgba(0,0,0,.12);
+animation: fadeIn .5s ease;
+}
+
+/* ==========
+Заголовки
+========== */
+
+h1 {
+font-size: 54px;
+text-align: center;
+}
+
+h2 {
+text-align: center;
+color: #005fb8;
+margin-top: 10px;
+}
+
+h3 {
+text-align: center;
+margin-top: 10px;
+color: #4b5563;
+}
+
+.theme {
+text-align: center;
+font-size: 22px;
+margin: 20px 0 30px;
+font-weight: bold;
+}
+
+/* ==========
+Поля ввода
+========== */
+
+input {
+width: 100%;
+padding: 16px;
+border-radius: 12px;
+border: 2px solid #d7e3f4;
+margin-bottom: 18px;
+font-size: 17px;
+transition: .25s;
+}
+
+input:focus {
+outline: none;
+border-color: #0b69c7;
+box-shadow: 0 0 0 4px rgba(11,105,199,.12);
+}
+
+/* ==========
+Кнопки
+========== */
+
+button {
+width: 100%;
+padding: 16px;
+border: none;
+border-radius: 14px;
+cursor: pointer;
+background: #0b69c7;
+color: white;
+font-size: 18px;
+font-weight: 600;
+transition: .25s;
+}
+
+button:hover {
+background: #0958a7;
+transform: translateY(-2px);
+}
+
+button:active {
+transform: scale(.98);
+}
+
+/* ==========
+Прогресс
+========== */
+
+.progress {
+width: 100%;
+height: 10px;
+background: #e6eef8;
+border-radius: 30px;
+overflow: hidden;
+margin-bottom: 20px;
+}
+
+#progressBar {
+width: 0%;
+height: 100%;
+background: linear-gradient(90deg,#0b69c7,#2ca7ff);
+transition: .4s;
+}
+
+/* ==========
+Вопрос
+========== */
+
+#questionCounter {
+color: #6b7280;
+margin-bottom: 12px;
+text-align: center;
+}
+
+#question {
+margin-bottom: 25px;
+text-align: center;
+}
+
+/* ==========
+Варианты ответов
+========== */
+
+.answer {
+display: block;
+width: 100%;
+background: #f8fbff;
+border: 2px solid #d8e7f7;
+border-radius: 14px;
+padding: 16px;
+margin-bottom: 14px;
+cursor: pointer;
+transition: .2s;
+}
+
+.answer:hover {
+border-color: #0b69c7;
+background: #eef7ff;
+}
+
+.answer.selected {
+border-color: #0b69c7;
+background: #dcebff;
+}
+
+/* ==========
+Подсказка
+========== */
+
+#feedback {
+margin-top: 20px;
+text-align: center;
+font-size: 17px;
+line-height: 1.5;
+}
+
+/* ==========
+Экран результата
+========== */
+
+#resultScreen {
+text-align: center;
+}
+
+#percent {
+font-size: 64px;
+margin: 20px 0;
+color: #0b69c7;
+}
+
+#grade {
+margin-bottom: 15px;
+}
+
+/* ==========
+Скрытые блоки
+========== */
+
+.hidden {
+display: none;
+}
+
+/* ==========
+Анимация
+========== */
+
+@keyframes fadeIn {
+from {
+opacity: 0;
+transform: translateY(15px);
+}
+
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+/* ==========
+Телефон
+========== */
+
+@media (max-width:640px){
+
+.card{
+padding:24px;
+}
+
+h1{
+font-size:44px;
+}
+
+.theme{
+font-size:20px;
+}
+
+button{
+font-size:17px;
+}
+
+}
