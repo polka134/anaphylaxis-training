@@ -1,1 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Тестирование сотрудников
+</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>
+
+🏥
+
+</h1>
+
+<h2>
+
+ГБУЗ "ГП №134 ДЗМ"
+
+</h2>
+
+<h3>
+
+Итоговое тестирование
+
+</h3>
+
+<p class="theme">
+
+Анафилактический шок
+
+</p>
+
+<div id="startScreen">
+
+<input
+id="name"
+type="text"
+placeholder="ФИО">
+
+<input
+id="department"
+type="text"
+placeholder="Подразделение">
+
+<button
+id="startBtn">
+
+Начать тест
+
+</button>
+
+</div>
+
+<div
+id="quizScreen"
+class="hidden">
+
+<div class="progress">
+
+<div
+id="progressBar">
+
+</div>
+
+</div>
+
+<p id="questionCounter">
+
+</p>
+
+<h2 id="question">
+
+</h2>
+
+<div id="answers">
+
+</div>
+
+<button
+id="nextBtn">
+
+Ответить
+
+</button>
+
+<div id="feedback">
+
+</div>
+
+</div>
+
+<div
+id="resultScreen"
+class="hidden">
+
+<h2>
+
+Тест завершен
+
+</h2>
+
+<p id="username">
+
+</p>
+
+<h1 id="percent">
+
+</h1>
+
+<h3 id="grade">
+
+</h3>
+
+<p id="score">
+
+</p>
+
+<button
+onclick="restartTest()">
+
+Пройти снова
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="script.js">
+
+</script>
+
+</body>
+
+</html>
