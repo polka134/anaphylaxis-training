@@ -1,153 +1,68 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>
-Тестирование сотрудников
-</title>
-
-<link rel="stylesheet" href="style.css">
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#075ea8">
+  <meta name="description" content="Интерактивный тест для среднего медицинского персонала по теме «Анафилактический шок».">
+  <title>Анафилактический шок — итоговое тестирование</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
 </head>
-
 <body>
+  <main class="shell">
+    <section class="card" aria-live="polite">
+      <header class="brand">
+        <p class="eyebrow">ГБУЗ «ГП №134 ДЗМ»</p>
+        <div class="medical-mark" aria-hidden="true">+</div>
+      </header>
 
-<div class="container">
+      <section id="start-screen" class="screen">
+        <p class="kicker">Итоговое тестирование</p>
+        <h1>Анафилактический шок</h1>
+        <p class="lead">Для среднего медицинского персонала</p>
+        <form id="start-form" novalidate>
+          <label for="full-name">ФИО</label>
+          <input id="full-name" name="fullName" autocomplete="name" placeholder="Иванова Мария Сергеевна" required>
+          <p id="name-error" class="field-error" aria-live="assertive"></p>
+          <label for="department">Подразделение</label>
+          <input id="department" name="department" autocomplete="organization-title" placeholder="Процедурный кабинет" required>
+          <p id="department-error" class="field-error" aria-live="assertive"></p>
+          <button class="primary" type="submit">Начать тест</button>
+        </form>
+        <div class="test-meta"><span>12 вопросов</span><span>≈ 5 минут</span><span>1 попытка за сеанс</span></div>
+      </section>
 
-<div class="card">
+      <section id="quiz-screen" class="screen hidden">
+        <div class="quiz-topline">
+          <span id="question-counter">Вопрос 1 из 12</span>
+          <span id="progress-value">8%</span>
+        </div>
+        <div class="progress" role="progressbar" aria-label="Прогресс теста" aria-valuemin="0" aria-valuemax="100" aria-valuenow="8">
+          <div id="progress-bar"></div>
+        </div>
+        <p id="question-type" class="kicker"></p>
+        <h2 id="question-text"></h2>
+        <div id="answers" class="answers" role="group" aria-labelledby="question-text"></div>
+        <div id="feedback" class="feedback hidden" role="status"></div>
+        <button id="next-button" class="primary hidden" type="button">Следующий вопрос</button>
+      </section>
 
-<h1>
-
-🏥
-
-</h1>
-
-<h2>
-
-ГБУЗ "ГП №134 ДЗМ"
-
-</h2>
-
-<h3>
-
-Итоговое тестирование
-
-</h3>
-
-<p class="theme">
-
-Анафилактический шок
-
-</p>
-
-<div id="startScreen">
-
-<input
-id="name"
-type="text"
-placeholder="ФИО">
-
-<input
-id="department"
-type="text"
-placeholder="Подразделение">
-
-<button
-id="startBtn">
-
-Начать тест
-
-</button>
-
-</div>
-
-<div
-id="quizScreen"
-class="hidden">
-
-<div class="progress">
-
-<div
-id="progressBar">
-
-</div>
-
-</div>
-
-<p id="questionCounter">
-
-</p>
-
-<h2 id="question">
-
-</h2>
-
-<div id="answers">
-
-</div>
-
-<button
-id="nextBtn">
-
-Ответить
-
-</button>
-
-<div id="feedback">
-
-</div>
-
-</div>
-
-<div
-id="resultScreen"
-class="hidden">
-
-<h2>
-
-Тест завершен
-
-</h2>
-
-<p id="username">
-
-</p>
-
-<h1 id="percent">
-
-</h1>
-
-<h3 id="grade">
-
-</h3>
-
-<p id="score">
-
-</p>
-
-<button
-onclick="restartTest()">
-
-Пройти снова
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<script src="script.js">
-
-</script>
-
+      <section id="result-screen" class="screen result hidden">
+        <p class="kicker">Тест завершён</p>
+        <h2>Ваш результат</h2>
+        <div id="result-ring" class="result-ring"><strong id="result-percent">0%</strong></div>
+        <p id="result-grade" class="result-grade"></p>
+        <p id="result-score" class="result-score"></p>
+        <div class="result-person">
+          <strong id="result-name"></strong>
+          <span id="result-department"></span>
+        </div>
+        <p id="result-advice" class="result-advice"></p>
+        <button id="restart-button" class="primary" type="button">Пройти заново</button>
+      </section>
+    </section>
+    <p class="disclaimer">Учебный материал. При оказании помощи следуйте действующим клиническим рекомендациям и локальным алгоритмам учреждения.</p>
+  </main>
 </body>
-
 </html>
