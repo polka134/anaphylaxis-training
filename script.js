@@ -1,5 +1,7 @@
 "use strict";
 
+const RESULTS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwB5R_CF4IuSwa_UxogKPh13_RWTTgJTey3PiqOLKa37pUAzFiLTraVFAywk0KHp9l3/exec";
+
 const QUESTIONS = [
   {type:"Базовые действия",text:"Какой препарат является препаратом первой линии при анафилаксии?",options:["Преднизолон","Эпинефрин (адреналин)","Хлоропирамин","Дексаметазон"],correct:1,explanation:"Эпинефрин (адреналин) вводят без промедления. Антигистаминные препараты и глюкокортикостероиды не заменяют препарат первой линии."},
   {type:"Лекарственная помощь",text:"Каков предпочтительный путь первичного введения эпинефрина при анафилаксии?",options:["Подкожно","Внутримышечно","Внутривенно струйно всем пациентам","Внутрикожно"],correct:1,explanation:"Предпочтительно внутримышечное введение. Внутривенное введение требует специальной подготовки и мониторинга и не является рутинным первым шагом."},
@@ -17,7 +19,7 @@ const QUESTIONS = [
 
 const $ = (selector) => document.querySelector(selector);
 const screens = {start:$("#start-screen"),quiz:$("#quiz-screen"),result:$("#result-screen")};
-const state = {index:0,score:0,answered:false,fullName:"",department:""};
+const state = {index:0,score:0,answered:false,fullName:"",department:"",resultSubmitted:false};
 
 function showScreen(name){Object.entries(screens).forEach(([key,node])=>node.classList.toggle("hidden",key!==name));window.scrollTo({top:0,behavior:"smooth"});}
 function validateField(input,error,message){const valid=input.value.trim().length>1;input.classList.toggle("invalid",!valid);input.setAttribute("aria-invalid",String(!valid));error.textContent=valid?"":message;return valid;}
@@ -27,7 +29,7 @@ $("#start-form").addEventListener("submit",event=>{
   const nameInput=$("#full-name"),departmentInput=$("#department");
   const nameOK=validateField(nameInput,$("#name-error"),"Введите ФИО."),departmentOK=validateField(departmentInput,$("#department-error"),"Введите подразделение.");
   if(!nameOK||!departmentOK){(!nameOK?nameInput:departmentInput).focus();return;}
-  state.fullName=nameInput.value.trim();state.department=departmentInput.value.trim();state.index=0;state.score=0;renderQuestion();showScreen("quiz");
+  state.fullName=nameInput.value.trim();state.department=departmentInput.value.trim();state.index=0;state.score=0;state.resultSubmitted=false;renderQuestion();showScreen("quiz");
 });
 
 function renderQuestion(){
@@ -52,5 +54,31 @@ function checkAnswer(selectedIndex){
 $("#next-button").addEventListener("click",()=>{if(!state.answered)return;if(state.index<QUESTIONS.length-1){state.index++;renderQuestion();}else{renderResult();showScreen("result");}});
 
 function getGrade(percent){if(percent>=90)return{label:"Отлично",color:"#087a55",advice:"Высокий уровень подготовки. Продолжайте регулярно отрабатывать командный алгоритм действий."};if(percent>=75)return{label:"Хорошо",color:"#075ea8",advice:"Хороший результат. Повторите вопросы, в которых были допущены ошибки."};if(percent>=60)return{label:"Удовлетворительно",color:"#a35d00",advice:"Рекомендуется повторить алгоритм распознавания анафилаксии и оказания неотложной помощи."};return{label:"Требуется повторное обучение",color:"#b42318",advice:"Повторите учебный материал и локальный алгоритм учреждения, затем пройдите тест снова."};}
-function renderResult(){const percent=Math.round(state.score/QUESTIONS.length*100),grade=getGrade(percent),errors=QUESTIONS.length-state.score,ring=$("#result-ring");$("#result-percent").textContent=`${percent}%`;$("#result-grade").textContent=grade.label;$("#result-grade").style.color=grade.color;$("#result-score").textContent=`${state.score} из ${QUESTIONS.length} правильных · Ошибок: ${errors}`;$("#result-name").textContent=state.fullName;$("#result-department").textContent=state.department;$("#result-advice").textContent=grade.advice;ring.style.setProperty("--score-angle",`${percent*3.6}deg`);ring.style.setProperty("--score-color",grade.color);}
-$("#restart-button").addEventListener("click",()=>{$("#start-form").reset();$("#name-error").textContent="";$("#department-error").textContent="";state.index=0;state.score=0;state.answered=false;showScreen("start");$("#full-name").focus();});
+function renderResult(){const percent=Math.round(state.score/QUESTIONS.length*100),grade=getGrade(percent),errors=QUESTIONS.length-state.score,ring=$("#result-ring");$("#result-percent").textContent=`${percent}%`;$("#result-grade").textContent=grade.label;$("#result-grade").style.color=grade.color;$("#result-score").textContent=`${state.score} из ${QUESTIONS.length} правильных · Ошибок: ${errors}`;$("#result-name").textContent=state.fullName;$("#result-department").textContent=state.department;$("#result-advice").textContent=grade.advice;ring.style.setProperty("--score-angle",`${percent*3.6}deg`);ring.style.setProperty("--score-color",grade.color);sendResult();}
+
+async function sendResult(){
+  if(state.resultSubmitted)return;
+  state.resultSubmitted=true;
+  const percent=Math.round(state.score/QUESTIONS.length*100),grade=getGrade(percent);
+  const sync=$("#result-sync"),retry=$("#retry-send-button");
+  sync.className="result-sync sending";sync.textContent="Сохраняем результат в общей таблице…";retry.classList.add("hidden");
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
+  try{
+    await fetch(RESULTS_ENDPOINT,{
+      method:"POST",
+      mode:"no-cors",
+      headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({fullName:state.fullName,department:state.department,score:state.score,total:QUESTIONS.length,percent,grade:grade.label}),
+      signal:controller.signal,
+      keepalive:true
+    });
+    sync.className="result-sync success";sync.textContent="Результат сохранён в общей таблице.";
+  }catch(error){
+    state.resultSubmitted=false;
+    sync.className="result-sync error";sync.textContent="Не удалось сохранить результат. Проверьте интернет и повторите отправку.";
+    retry.classList.remove("hidden");
+  }finally{clearTimeout(timeout);}
+}
+
+$("#retry-send-button").addEventListener("click",sendResult);
+$("#restart-button").addEventListener("click",()=>{$("#start-form").reset();$("#name-error").textContent="";$("#department-error").textContent="";$("#result-sync").className="result-sync hidden";$("#retry-send-button").classList.add("hidden");state.index=0;state.score=0;state.answered=false;state.resultSubmitted=false;showScreen("start");$("#full-name").focus();});
