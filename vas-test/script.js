@@ -1,6 +1,6 @@
 "use strict";
 
-const RESULTS_ENDPOINT = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const RESULTS_ENDPOINT = "https://script.google.com/macros/s/AKfycbxWyHkG43Ob4VmCu6pM8fU1yRXrg7QMuQrfALrFnsesuTaJUx7eH6HYqw8IA7CalD-JqQ/exec";
 const STORAGE_KEY = "vas134-progress-v1";
 const QUESTIONS = window.VAS_QUESTIONS || [];
 
