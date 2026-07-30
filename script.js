@@ -1,84 +1,239 @@
 "use strict";
 
-const RESULTS_ENDPOINT = "https://script.google.com/macros/s/AKfycbwB5R_CF4IuSwa_UxogKPh13_RWTTgJTey3PiqOLKa37pUAzFiLTraVFAywk0KHp9l3/exec";
-
-const QUESTIONS = [
-  {type:"Базовые действия",text:"Какой препарат является препаратом первой линии при анафилаксии?",options:["Преднизолон","Эпинефрин (адреналин)","Хлоропирамин","Дексаметазон"],correct:1,explanation:"Эпинефрин (адреналин) вводят без промедления. Антигистаминные препараты и глюкокортикостероиды не заменяют препарат первой линии."},
-  {type:"Лекарственная помощь",text:"Каков предпочтительный путь первичного введения эпинефрина при анафилаксии?",options:["Подкожно","Внутримышечно","Внутривенно струйно всем пациентам","Внутрикожно"],correct:1,explanation:"Предпочтительно внутримышечное введение. Внутривенное введение требует специальной подготовки и мониторинга и не является рутинным первым шагом."},
-  {type:"Лекарственная помощь",text:"Куда предпочтительно вводить эпинефрин внутримышечно?",options:["В переднебоковую поверхность средней трети бедра","В ягодичную мышцу","В переднюю брюшную стенку","В предплечье"],correct:0,explanation:"Рекомендуемое место — переднебоковая поверхность средней трети бедра: здесь обеспечивается быстрое и надёжное всасывание."},
-  {type:"Дозирование",text:"Какова стандартная разовая доза эпинефрина для взрослого при внутримышечном введении раствора 1 мг/мл?",options:["0,05 мл (0,05 мг)","0,1 мл (0,1 мг)","0,5 мл (0,5 мг)","1 мл (1 мг)"],correct:2,explanation:"Для взрослого стандартная разовая доза — 0,5 мг, то есть 0,5 мл раствора 1 мг/мл. Всегда проверяйте концентрацию на ампуле."},
-  {type:"Повторная оценка",text:"Когда следует повторить внутримышечное введение эпинефрина, если сохраняются угрожающие симптомы?",options:["Не ранее чем через 30 минут","Примерно через 5 минут с повторной оценкой состояния","Только после введения антигистаминного препарата","Повторное введение противопоказано"],correct:1,explanation:"При сохраняющихся проблемах с дыхательными путями, дыханием или кровообращением дозу повторяют примерно через 5 минут, оценивая состояние пациента."},
-  {type:"Ситуационная задача",text:"Во время введения антибиотика пациент пожаловался на зуд, одышку и головокружение. АД 75/40 мм рт. ст. Какое действие необходимо выполнить немедленно?",options:["Завершить введение препарата","Прекратить поступление предполагаемого аллергена и начать алгоритм неотложной помощи","Дать пациенту воды","Оставить пациента одного и искать историю болезни"],correct:1,explanation:"Прекратите введение предполагаемого аллергена, позовите помощь и немедленно начинайте оказание неотложной помощи, не ожидая полного набора симптомов."},
-  {type:"Положение пациента",text:"Как уложить пациента с анафилаксией и выраженной гипотонией, если нет тяжёлой дыхательной недостаточности?",options:["Посадить и попросить встать при улучшении","Уложить на спину с приподнятыми ногами","Положить на живот","Разрешить ходить по кабинету"],correct:1,explanation:"Положение лёжа с приподнятыми ногами поддерживает венозный возврат. Не позволяйте пациенту внезапно садиться или вставать."},
-  {type:"Распознавание",text:"Какое утверждение о кожных проявлениях анафилаксии верно?",options:["Без крапивницы анафилаксия исключена","Кожные проявления обязательны только у взрослых","Отсутствие кожных проявлений не исключает анафилаксию","Сыпь всегда появляется раньше нарушения дыхания"],correct:2,explanation:"Анафилаксия может протекать без крапивницы и других кожных проявлений. Ориентируйтесь на быстрое развитие угрожающих нарушений дыхания или кровообращения."},
-  {type:"Поддерживающая помощь",text:"Что входит в первичную поддерживающую помощь после введения эпинефрина?",options:["Кислород, мониторинг, обеспечение венозного доступа и инфузия кристаллоидов по показаниям","Только измерение температуры","Приём пищи и жидкости внутрь","Ожидание врача без дальнейших действий"],correct:0,explanation:"Продолжайте оценку ABCDE: кислород при наличии показаний, мониторинг, венозный доступ и быстрая инфузия кристаллоидов при гипотонии."},
-  {type:"Препараты второй линии",text:"Какова роль антигистаминных препаратов при анафилаксии?",options:["Они заменяют эпинефрин","Их дают до эпинефрина при гипотонии","Они могут уменьшить кожные симптомы, но не лечат нарушения дыхания и кровообращения","Они предотвращают все двухфазные реакции"],correct:2,explanation:"Антигистаминные препараты — не средство спасения при шоке или обструкции дыхательных путей. Их рассматривают только после стабилизации угрожающих функций."},
-  {type:"Мониторинг",text:"Какие показатели необходимо регулярно контролировать во время оказания помощи?",options:["Только температуру","АД, пульс, частоту дыхания, сатурацию и уровень сознания","Только частоту пульса","Рост и массу тела"],correct:1,explanation:"Регулярно оценивайте дыхательные пути, дыхание, кровообращение и сознание, фиксируя АД, пульс, частоту дыхания и SpO₂."},
-  {type:"После стабилизации",text:"Какова правильная тактика после улучшения состояния?",options:["Отпустить пациента домой сразу после исчезновения сыпи","Продолжить медицинское наблюдение и организовать госпитализацию/транспортировку по действующему алгоритму","Разрешить пациенту самостоятельно ехать домой","Завершить наблюдение через 10 минут"],correct:1,explanation:"После анафилаксии требуется медицинское наблюдение из-за риска рецидива; дальнейшую маршрутизацию проводят по клиническим рекомендациям и локальному алгоритму."}
-];
+const RESULTS_ENDPOINT = "PASTE_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const STORAGE_KEY = "vas134-progress-v1";
+const QUESTIONS = window.VAS_QUESTIONS || [];
 
 const $ = (selector) => document.querySelector(selector);
-const screens = {start:$("#start-screen"),quiz:$("#quiz-screen"),result:$("#result-screen")};
-const state = {index:0,score:0,answered:false,fullName:"",department:"",resultSubmitted:false};
+const screens = {
+  start: $("#start-screen"),
+  quiz: $("#quiz-screen"),
+  loading: $("#loading-screen"),
+  result: $("#result-screen"),
+};
 
-function showScreen(name){Object.entries(screens).forEach(([key,node])=>node.classList.toggle("hidden",key!==name));window.scrollTo({top:0,behavior:"smooth"});}
-function validateField(input,error,message){const valid=input.value.trim().length>1;input.classList.toggle("invalid",!valid);input.setAttribute("aria-invalid",String(!valid));error.textContent=valid?"":message;return valid;}
+let state = {
+  index: 0,
+  answers: [],
+  startedAt: 0,
+  completed: false,
+  fullName: "",
+  department: "",
+  specialty: "",
+};
 
-$("#start-form").addEventListener("submit",event=>{
+function showScreen(name) {
+  Object.entries(screens).forEach(([key, node]) => node.classList.toggle("hidden", key !== name));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function persist() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function clearPersisted() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+function renderQuestion() {
+  const item = QUESTIONS[state.index];
+  const number = state.index + 1;
+  const progress = Math.round((number / QUESTIONS.length) * 100);
+
+  $("#question-counter").textContent = `Вопрос ${number} из ${QUESTIONS.length}`;
+  $("#progress-value").textContent = `${progress}%`;
+  $("#progress-bar").style.width = `${progress}%`;
+  $(".progress").setAttribute("aria-valuenow", String(progress));
+  $("#question-type").textContent = item.type;
+  $("#question-text").textContent = item.text;
+
+  const answersNode = $("#answers");
+  answersNode.replaceChildren();
+
+  item.options.forEach((option, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "answer";
+    button.innerHTML = `<span class="answer-letter">${String.fromCharCode(1040 + index)}</span><span>${option}</span>`;
+    button.addEventListener("click", () => selectAnswer(index));
+    answersNode.append(button);
+  });
+
+  $("#feedback").className = "feedback hidden";
+  $("#feedback").textContent = "";
+  $("#next-button").classList.add("hidden");
+
+  const existing = state.answers[state.index];
+  if (Number.isInteger(existing)) revealAnswer(existing);
+}
+
+function selectAnswer(index) {
+  if (Number.isInteger(state.answers[state.index])) return;
+  state.answers[state.index] = index;
+  persist();
+  revealAnswer(index);
+}
+
+function revealAnswer(selectedIndex) {
+  const item = QUESTIONS[state.index];
+  const buttons = [...document.querySelectorAll(".answer")];
+  const correct = selectedIndex === item.correct;
+
+  buttons.forEach((button, index) => {
+    button.disabled = true;
+    if (index === item.correct) button.classList.add("correct");
+    else if (index === selectedIndex) button.classList.add("incorrect");
+  });
+
+  const feedback = $("#feedback");
+  feedback.className = "feedback";
+  feedback.innerHTML = `<strong>${correct ? "Верно" : "Неверно"}</strong>${item.explanation}`;
+
+  const next = $("#next-button");
+  next.textContent = state.index === QUESTIONS.length - 1 ? "Завершить тест" : "Следующий вопрос";
+  next.classList.remove("hidden");
+}
+
+$("#start-form").addEventListener("submit", (event) => {
   event.preventDefault();
-  const nameInput=$("#full-name"),departmentInput=$("#department");
-  const nameOK=validateField(nameInput,$("#name-error"),"Введите ФИО."),departmentOK=validateField(departmentInput,$("#department-error"),"Введите подразделение.");
-  if(!nameOK||!departmentOK){(!nameOK?nameInput:departmentInput).focus();return;}
-  state.fullName=nameInput.value.trim();state.department=departmentInput.value.trim();state.index=0;state.score=0;state.resultSubmitted=false;renderQuestion();showScreen("quiz");
+
+  const fullName = $("#full-name").value.trim();
+  const department = $("#department").value.trim();
+  const specialty = $("#specialty").value.trim();
+
+  if (!fullName || !department || !specialty) {
+    $("#form-error").textContent = "Заполните все поля.";
+    return;
+  }
+
+  state = {
+    index: 0,
+    answers: [],
+    startedAt: Date.now(),
+    completed: false,
+    fullName,
+    department,
+    specialty,
+  };
+
+  persist();
+  renderQuestion();
+  showScreen("quiz");
 });
 
-function renderQuestion(){
-  state.answered=false;
-  const item=QUESTIONS[state.index],number=state.index+1,progress=Math.round(number/QUESTIONS.length*100);
-  $("#question-counter").textContent=`Вопрос ${number} из ${QUESTIONS.length}`;$("#progress-value").textContent=`${progress}%`;$("#progress-bar").style.width=`${progress}%`;
-  $(".progress").setAttribute("aria-valuenow",String(progress));$("#question-type").textContent=item.type;$("#question-text").textContent=item.text;
-  const answers=$("#answers");answers.replaceChildren();
-  item.options.forEach((option,index)=>{const button=document.createElement("button");button.type="button";button.className="answer";button.innerHTML=`<span class="answer-letter">${String.fromCharCode(1040+index)}</span><span>${option}</span>`;button.addEventListener("click",()=>checkAnswer(index));answers.append(button);});
-  $("#feedback").className="feedback hidden";$("#feedback").textContent="";$("#next-button").classList.add("hidden");
+$("#next-button").addEventListener("click", () => {
+  if (!Number.isInteger(state.answers[state.index])) return;
+
+  if (state.index < QUESTIONS.length - 1) {
+    state.index += 1;
+    persist();
+    renderQuestion();
+  } else {
+    finishTest();
+  }
+});
+
+async function finishTest() {
+  showScreen("loading");
+
+  const theoryItems = QUESTIONS.map((q, i) => ({ q, i })).filter(({ q }) => q.category === "theory");
+  const practiceItems = QUESTIONS.map((q, i) => ({ q, i })).filter(({ q }) => q.category === "practice");
+
+  const theoryScore = theoryItems.filter(({ q, i }) => state.answers[i] === q.correct).length;
+  const practiceScore = practiceItems.filter(({ q, i }) => state.answers[i] === q.correct).length;
+  const totalScore = theoryScore + practiceScore;
+  const percent = Math.round((totalScore / QUESTIONS.length) * 100);
+  const passed = percent >= 75;
+  const wrongQuestions = QUESTIONS
+    .map((q, i) => (state.answers[i] === q.correct ? null : i + 1))
+    .filter(Boolean);
+
+  const payload = {
+    date: new Date().toLocaleDateString("ru-RU"),
+    time: new Date().toLocaleTimeString("ru-RU"),
+    fullName: state.fullName,
+    department: state.department,
+    specialty: state.specialty,
+    theoryScore,
+    practiceScore,
+    totalScore,
+    totalQuestions: QUESTIONS.length,
+    percent,
+    status: passed ? "Пройден" : "Не пройден",
+    durationSeconds: Math.round((Date.now() - state.startedAt) / 1000),
+    wrongQuestions: wrongQuestions.join(", "),
+    testName: "Визуальная аналоговая шкала",
+  };
+
+  const syncOk = await submitResult(payload);
+  await new Promise((resolve) => setTimeout(resolve, 1800));
+
+  $("#result-percent").textContent = `${percent}%`;
+  $("#result-ring").style.setProperty("--angle", `${percent * 3.6}deg`);
+  $("#result-status").textContent = passed ? "Тест пройден" : "Тест не пройден";
+  $("#result-status").style.color = passed ? "var(--success)" : "var(--danger)";
+  $("#theory-score").textContent = `${theoryScore} / ${theoryItems.length}`;
+  $("#practice-score").textContent = `${practiceScore} / ${practiceItems.length}`;
+  $("#result-person").textContent = `${state.fullName} · ${state.department} · ${state.specialty}`;
+  $("#result-sync").textContent = syncOk
+    ? "Результат сохранён в общей таблице."
+    : "Тест завершён, но отправка в Google Таблицу пока не настроена.";
+
+  state.completed = true;
+  clearPersisted();
+  showScreen("result");
 }
 
-function checkAnswer(selectedIndex){
-  if(state.answered)return;state.answered=true;
-  const item=QUESTIONS[state.index],buttons=[...document.querySelectorAll(".answer")],isCorrect=selectedIndex===item.correct;
-  if(isCorrect)state.score++;
-  buttons.forEach((button,index)=>{button.disabled=true;if(index===item.correct)button.classList.add("correct");else if(index===selectedIndex)button.classList.add("incorrect");});
-  const feedback=$("#feedback");feedback.className=`feedback ${isCorrect?"correct":"incorrect"}`;feedback.innerHTML=`<strong>${isCorrect?"Верно":"Неверно"}</strong>${item.explanation}`;
-  const next=$("#next-button");next.textContent=state.index===QUESTIONS.length-1?"Показать результат":"Следующий вопрос";next.classList.remove("hidden");next.focus();
-}
+async function submitResult(payload) {
+  if (!RESULTS_ENDPOINT.startsWith("https://script.google.com/")) return false;
 
-$("#next-button").addEventListener("click",()=>{if(!state.answered)return;if(state.index<QUESTIONS.length-1){state.index++;renderQuestion();}else{renderResult();showScreen("result");}});
-
-function getGrade(percent){if(percent>=90)return{label:"Отлично",color:"#087a55",advice:"Высокий уровень подготовки. Продолжайте регулярно отрабатывать командный алгоритм действий."};if(percent>=75)return{label:"Хорошо",color:"#075ea8",advice:"Хороший результат. Повторите вопросы, в которых были допущены ошибки."};if(percent>=60)return{label:"Удовлетворительно",color:"#a35d00",advice:"Рекомендуется повторить алгоритм распознавания анафилаксии и оказания неотложной помощи."};return{label:"Требуется повторное обучение",color:"#b42318",advice:"Повторите учебный материал и локальный алгоритм учреждения, затем пройдите тест снова."};}
-function renderResult(){const percent=Math.round(state.score/QUESTIONS.length*100),grade=getGrade(percent),errors=QUESTIONS.length-state.score,ring=$("#result-ring");$("#result-percent").textContent=`${percent}%`;$("#result-grade").textContent=grade.label;$("#result-grade").style.color=grade.color;$("#result-score").textContent=`${state.score} из ${QUESTIONS.length} правильных · Ошибок: ${errors}`;$("#result-name").textContent=state.fullName;$("#result-department").textContent=state.department;$("#result-advice").textContent=grade.advice;ring.style.setProperty("--score-angle",`${percent*3.6}deg`);ring.style.setProperty("--score-color",grade.color);sendResult();}
-
-async function sendResult(){
-  if(state.resultSubmitted)return;
-  state.resultSubmitted=true;
-  const percent=Math.round(state.score/QUESTIONS.length*100),grade=getGrade(percent);
-  const sync=$("#result-sync"),retry=$("#retry-send-button");
-  sync.className="result-sync sending";sync.textContent="Сохраняем результат в общей таблице…";retry.classList.add("hidden");
-  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),15000);
-  try{
-    await fetch(RESULTS_ENDPOINT,{
-      method:"POST",
-      mode:"no-cors",
-      headers:{"Content-Type":"text/plain;charset=utf-8"},
-      body:JSON.stringify({fullName:state.fullName,department:state.department,score:state.score,total:QUESTIONS.length,percent,grade:grade.label}),
-      signal:controller.signal,
-      keepalive:true
+  try {
+    await fetch(RESULTS_ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      keepalive: true,
     });
-    sync.className="result-sync success";sync.textContent="Результат сохранён в общей таблице.";
-  }catch(error){
-    state.resultSubmitted=false;
-    sync.className="result-sync error";sync.textContent="Не удалось сохранить результат. Проверьте интернет и повторите отправку.";
-    retry.classList.remove("hidden");
-  }finally{clearTimeout(timeout);}
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-$("#retry-send-button").addEventListener("click",sendResult);
-$("#restart-button").addEventListener("click",()=>{$("#start-form").reset();$("#name-error").textContent="";$("#department-error").textContent="";$("#result-sync").className="result-sync hidden";$("#retry-send-button").classList.add("hidden");state.index=0;state.score=0;state.answered=false;state.resultSubmitted=false;showScreen("start");$("#full-name").focus();});
+$("#restart-button").addEventListener("click", () => {
+  clearPersisted();
+  location.reload();
+});
+
+window.addEventListener("beforeunload", (event) => {
+  if (state.startedAt && !state.completed && state.answers.length < QUESTIONS.length) {
+    event.preventDefault();
+    event.returnValue = "";
+  }
+});
+
+(function restoreProgress() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+
+  try {
+    const saved = JSON.parse(raw);
+    if (!saved.startedAt || saved.completed) {
+      clearPersisted();
+      return;
+    }
+
+    const resume = window.confirm("Найден незавершённый тест. Продолжить прохождение?");
+    if (!resume) {
+      clearPersisted();
+      return;
+    }
+
+    state = saved;
+    renderQuestion();
+    showScreen("quiz");
+  } catch {
+    clearPersisted();
+  }
+})();
