@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ВАШ — администратор</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+    .admin-card{background:#edf6fb;border-radius:14px;padding:16px}
+    .admin-card span,.admin-card strong{display:block}.admin-card span{color:var(--muted);font-size:14px}.admin-card strong{font-size:28px;margin-top:5px}
+    table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
+    .table-wrap{overflow:auto}.chart{display:grid;gap:9px}.bar-row{display:grid;grid-template-columns:90px 1fr 44px;gap:8px;align-items:center}.bar{height:12px;background:#e4eef4;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--blue)}
+    @media(max-width:620px){.admin-grid{grid-template-columns:1fr}.bar-row{grid-template-columns:72px 1fr 40px}}
+  </style>
+  <script src="admin.js" defer></script>
+</head>
+<body>
+<main class="shell">
+  <section class="card">
+    <header class="brand"><img src="assets/logo.svg" alt=""><div><strong>Панель администратора</strong><span>ВАШ — статистика прохождения</span></div></header>
+    <section class="screen">
+      <p class="eyebrow">Локальный просмотр данных</p>
+      <h1>Результаты тестирования</h1>
+      <p class="lead">Экспортируйте Google Таблицу в CSV и загрузите файл сюда. Данные обрабатываются только в браузере.</p>
+      <input id="csv-file" type="file" accept=".csv,text/csv">
+      <div class="admin-grid">
+        <div class="admin-card"><span>Участников</span><strong id="participants">—</strong></div>
+        <div class="admin-card"><span>Средний результат</span><strong id="average">—</strong></div>
+        <div class="admin-card"><span>Среднее время</span><strong id="duration">—</strong></div>
+      </div>
+      <h2>Самые сложные вопросы</h2>
+      <div id="hardest" class="chart"><p class="lead">Загрузите CSV-файл.</p></div>
+      <h2 style="margin-top:28px">Последние результаты</h2>
+      <div class="table-wrap"><table><thead><tr><th>ФИО</th><th>Подразделение</th><th>Результат</th><th>Статус</th></tr></thead><tbody id="results-body"></tbody></table></div>
+    </section>
+  </section>
+</main>
+</body>
+</html>

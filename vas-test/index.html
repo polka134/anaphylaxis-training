@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a67a5">
+  <meta name="description" content="Интерактивное тестирование по применению визуальной аналоговой шкалы боли.">
+  <title>ВАШ — итоговое тестирование</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="questions.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <section class="card" aria-live="polite">
+      <header class="brand">
+        <img src="assets/logo.svg" alt="Логотип ГБУЗ ГП №134 ДЗМ">
+        <div>
+          <strong>ГБУЗ «ГП №134 ДЗМ»</strong>
+          <span>Интерактивное обучение</span>
+        </div>
+      </header>
+
+      <section id="start-screen" class="screen">
+        <p class="eyebrow">Итоговое тестирование</p>
+        <h1>Визуальная аналоговая шкала</h1>
+        <p class="lead">Клиническое применение ВАШ при оценке боли</p>
+
+        <div class="meta">
+          <span>35 вопросов</span>
+          <span>25 теория + 10 задач</span>
+          <span>Порог 75%</span>
+        </div>
+
+        <form id="start-form" novalidate>
+          <label for="full-name">ФИО</label>
+          <input id="full-name" autocomplete="name" placeholder="Иванова Мария Сергеевна" required>
+
+          <label for="department">Подразделение</label>
+          <input id="department" autocomplete="organization-title" placeholder="Терапевтическое отделение" required>
+
+          <label for="specialty">Специальность</label>
+          <input id="specialty" placeholder="Медицинская сестра" required>
+
+          <p id="form-error" class="field-error" aria-live="assertive"></p>
+          <button class="button primary" type="submit">Начать тест</button>
+        </form>
+      </section>
+
+      <section id="quiz-screen" class="screen hidden">
+        <div class="quiz-topline">
+          <span id="question-counter"></span>
+          <span id="progress-value"></span>
+        </div>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div id="progress-bar"></div>
+        </div>
+        <p id="question-type" class="eyebrow"></p>
+        <h2 id="question-text"></h2>
+        <div id="answers" class="answers"></div>
+        <div id="feedback" class="feedback hidden" role="status"></div>
+        <button id="next-button" class="button primary hidden" type="button">Следующий вопрос</button>
+      </section>
+
+      <section id="loading-screen" class="screen loading hidden">
+        <div class="spinner"></div>
+        <h2>Проверяем ответы…</h2>
+        <p>Сохраняем результат в общей таблице</p>
+      </section>
+
+      <section id="result-screen" class="screen result hidden">
+        <p class="eyebrow">Тест завершён</p>
+        <h2>Ваш результат</h2>
+        <div id="result-ring" class="result-ring"><strong id="result-percent">0%</strong></div>
+        <h3 id="result-status"></h3>
+        <div class="result-grid">
+          <div><span>Теория</span><strong id="theory-score"></strong></div>
+          <div><span>Практика</span><strong id="practice-score"></strong></div>
+        </div>
+        <p id="result-person"></p>
+        <p id="result-sync" class="sync"></p>
+        <button id="restart-button" class="button secondary" type="button">Пройти заново</button>
+      </section>
+    </section>
+
+    <p class="disclaimer">Учебный материал. ВАШ не заменяет клиническую оценку и локальные алгоритмы учреждения.</p>
+  </main>
+</body>
+</html>
